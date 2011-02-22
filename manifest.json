@@ -1,0 +1,26 @@
+{
+   "background_page": "htm/background.htm",
+   "browser_action": {
+      "default_icon": "img/hl_16.png",
+      "default_title": "Settings",
+      "popup": "htm/popup.htm"
+   },
+   "content_scripts": [ {
+      "css": [ "css/select.css" ],
+      "js": [ "js/select.js", "js/searchhi_slim.js" ],
+      "matches": [ "http://*/*", "https://*/*" ]
+   } ],
+   "description": "Highlight all text in an html page matching the current selection.",
+   "icons": {
+      "128": "img/hl_128.png",
+      "16": "img/hl_16.png",
+      "32": "img/hl_32.png",
+      "48": "img/hl_48.png"
+   },
+   "key": "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDJ/PL2kFKNd9EwKWPhVeKgnVtziISeQ3/tLD3An6ukA9mw15hCb6/WS9uQ/59ZWQJXHCQlmHRxCdLCHXzF8PCvbBrf70vovjZYtoi4MT8yTvPthVoFc6hXLEGcP+pKHf23YjABPQr2CABkxe/aqBg0ESr3zYMDaKSFJS/AKwD+QQIDAQAB",
+   "name": "Highlight All",
+   "options_page": "htm/options.htm",
+   "permissions": [ "contextMenus", "tabs", "http://*/*", "https://*/*", "*://*/*" ],
+   "update_url": "http://clients2.google.com/service/update2/crx",
+   "version": "0.25"
+}

@@ -1,0 +1,33 @@
+
+
+<script type="text/javascript" src="../js/jscolor/jscolor.js"></script>
+<script>
+
+	function setColor(colorBox)
+	{
+		chrome.extension.sendRequest({command:colorBox.id,value:colorBox.value});	
+		chrome.extension.sendRequest({command:"textColor",value:colorBox.style.color});
+	}
+	
+	function loadSettings(result)
+	{
+		document.getElementById("highlightColor").color.fromString(result.highlightColor);
+	}
+	
+	chrome.extension.sendRequest({command:"getSettings"}, loadSettings)
+	
+</script>
+<center>
+Highlight All Options
+</center>
+<hr/>
+<br/>
+<br/>
+Highlight Color: <input id="highlightColor" class="color" onchange="setColor(this)"/>
+(Open tabs must be refreshed)
+<br/>
+<br/>
+<hr/>
+<center><a href="http://chrome.google.com/webstore/detail/fgnkddoolcfhpoccklnhlpdellmpjbnm">Chrome Web Store Page</a>  
+
+</center>

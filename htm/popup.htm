@@ -1,0 +1,74 @@
+<style>
+	body 
+	{
+	  overflow: hidden;
+	  margin: 0px;
+	  padding: 0px;
+	  background: white;
+	}
+
+	div:first-child {
+	  margin-top: 0px;
+	}
+
+	div {
+	  padding: 1px 3px;
+	  font-family: sans-serif;
+	  font-size: 0.8em;
+	  width: 200px;
+	  margin-top: 1px;
+	}
+
+	input
+	{
+	  cursor: pointer;
+	}
+
+	}
+</style>
+<script>
+
+	//Fetch settings from background.htm
+	function loadSettings(result)
+	{
+		
+		document.getElementById("highlightOnSelect").checked = result.highlightOnSelect;
+		document.getElementById("clearBetweenSelect").checked = result.clearBetweenSelect;
+		document.getElementById("singleWordSearch").checked = result.singleWordSearch;
+	
+	}
+	
+	//Send request to background.htm when button clicked
+	function buttonClicked(button) 
+	{
+		chrome.extension.sendRequest({command:button.id});
+	}
+	
+	//Send request to background.htm when checkbox clicked
+	function checkboxClicked(checkBox)
+	{
+		chrome.extension.sendRequest({command:checkBox.id,value:checkBox.checked});	
+	}
+	
+	//Open options tab
+	function openOptions()
+	{
+		chrome.tabs.create({url:"chrome-extension://fgnkddoolcfhpoccklnhlpdellmpjbnm/htm/options.htm"});
+	}
+	chrome.extension.sendRequest({command:"getSettings"}, loadSettings);
+	
+</script>
+<div>
+	<input style="width:100%" type="button" value="Highlight Selection" id="highlightSelection" onclick="buttonClicked(this)"/><br/>
+
+	<input style="width:100%" type="button" value="Clear Highlights" id="clear" onclick="buttonClicked(this)"/><br/>
+	
+	<hr/>
+	
+	<input type="checkbox" id="highlightOnSelect" onclick="checkboxClicked(this)"/>Highlight on Selection<br/>
+	<input type="checkbox" id="clearBetweenSelect" onclick="checkboxClicked(this)"/>Clear Between Selections<br/>
+	<input type="checkbox" id="singleWordSearch" onclick="checkboxClicked(this)"/>Single Word Search<br/>
+	
+	<hr/>
+	<center><a href="javascript:openOptions()">Additional Options</a></center>
+</div>
