@@ -4,36 +4,31 @@
 var clearBetweenSelections = true;
 var singleSearch = false;
 var lastText = "";
-var disable = false;
+var imedBool = false;
 
-
-//Toggle mouseup listener to highlight on selection
-function immediateHighlighting(imedBool)
-{
-
-	if (imedBool)
-	{
-		document.onmouseup = highlightSelection;
-	}
-	else
-	{
-		document.onmouseup = '';
-	}
-}
-
+//Listener to highlight on selection
+document.onmouseup = highlightSelection;
 
 //Highlight all occurances of the current selection
 function highlightSelection(e) 
 {	
-	if(e.ctrlKey)
+	if (e != undefined)
 	{
-		return;
+		if(imedBool && e.ctrlKey)
+		{
+			return;
+		}
+		
+		if(!imedBool && !e.ctrlKey)
+		{
+			return;
+		}
 	}
 	
 	var selectedText = getSelectedText().replace(/^\s+|\s+$/g, "");
 	var testText = selectedText.toLowerCase();
 	
-	if (disable || selectedText == '' || lastText == testText)
+	if (selectedText == '' || lastText == testText)
 	{
 		return;
 	}
@@ -78,10 +73,10 @@ function getSelectedText()
 	return '' + txt;
 }
 
-function updateBooleans(clearBool, imedBool, singleBool)
+function updateBooleans(clearBool, highlightOnSelect, singleBool)
 {
 	clearBetweenSelections = clearBool;
-	immediateHighlighting(imedBool);
+	imedBool = highlightOnSelect;
 	singleSearch = singleBool;
 }
 

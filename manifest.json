@@ -17,10 +17,9 @@
       "32": "img/hl_32.png",
       "48": "img/hl_48.png"
    },
-   "key": "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDJ/PL2kFKNd9EwKWPhVeKgnVtziISeQ3/tLD3An6ukA9mw15hCb6/WS9uQ/59ZWQJXHCQlmHRxCdLCHXzF8PCvbBrf70vovjZYtoi4MT8yTvPthVoFc6hXLEGcP+pKHf23YjABPQr2CABkxe/aqBg0ESr3zYMDaKSFJS/AKwD+QQIDAQAB",
    "name": "Highlight All",
    "options_page": "htm/options.htm",
    "permissions": [ "contextMenus", "tabs", "http://*/*", "https://*/*", "*://*/*" ],
    "update_url": "http://clients2.google.com/service/update2/crx",
-   "version": "0.25"
+   "version": "0.26"
 }
