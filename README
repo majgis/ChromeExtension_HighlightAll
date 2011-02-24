@@ -21,7 +21,7 @@ Release Notes:
 
 	New in version 0.25:
 		 * Hold ctrl key to disable highlighting when "Highlight on Selection" is checked.
-		 * The selection will not clear if the same selection is made twice, when "Highlight on Selection" is enabled.
+		 * The selection will not clear if the same selection is made twice.
 
 	New in version 0.24:
 		 * Search for full selection(splitting selection into separate words is an option)
