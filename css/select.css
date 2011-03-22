@@ -1,5 +1,4 @@
-span.searchword
+span[class^=searchword]
 {
 	color:#000000;
-	background-color:#ff0;
 }
