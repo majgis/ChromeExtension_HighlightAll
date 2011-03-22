@@ -10,6 +10,9 @@ Please note, some code is copied from other projects:
 
 	Color selection is powered by jscolor:
 	http://jscolor.com/
+	
+	Color conversion:
+	http://mjijackson.com/2008/02/rgb-to-hsl-and-rgb-to-hsv-color-model-conversion-algorithms-in-javascript
 
 
 Release Notes:

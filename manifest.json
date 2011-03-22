@@ -7,8 +7,9 @@
    },
    "content_scripts": [ {
       "css": [ "css/select.css" ],
-      "js": [ "js/select.js", "js/searchhi_slim.js" ],
-      "matches": [ "http://*/*", "https://*/*" ]
+      "js": [ "js/colorgen.js", "js/select.js", "js/searchhi_slim.js" ],
+      "matches": [ "http://*/*", "https://*/*" ],
+      "run_at": "document_start"
    } ],
    "description": "Highlight all text in an html page matching the current selection.",
    "icons": {
@@ -21,5 +22,5 @@
    "options_page": "htm/options.htm",
    "permissions": [ "contextMenus", "tabs", "http://*/*", "https://*/*", "*://*/*" ],
    "update_url": "http://clients2.google.com/service/update2/crx",
-   "version": "0.27"
+   "version": "0.28"
 }

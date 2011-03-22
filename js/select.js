@@ -5,13 +5,19 @@ var clearBetweenSelections = true;
 var singleSearch = false;
 var lastText = "";
 var imedBool = false;
+var cssstr = "";
 
 //Listener to highlight on selection
 document.onmouseup = highlightSelection;
 
+function updateStyleNode(str) {
+    stylenode = typeof(stylenode) != 'undefined' ? stylenode : document.getElementsByTagName('head')[0].appendChild(document.createElement('style'));
+    stylenode.innerHTML = str;
+}
+
 //Highlight all occurances of the current selection
 function highlightSelection(e) 
-{	
+{
 
 	//Skip this section if mouse event is undefined
 	if (e != undefined)
@@ -62,7 +68,10 @@ function highlightSelection(e)
 // Clears all highlights on the page
 function clearHighlightsOnPage()
 {
-	unhighlight(document.getElementsByTagName('body')[0]);	
+	unhighlight(document.getElementsByTagName('body')[0]);
+	cssstr = "";
+	updateStyleNode(cssstr);
+	lastText = "";
 }
 
 function updateBooleans(clearBool, highlightOnSelect, singleBool)
@@ -72,5 +81,11 @@ function updateBooleans(clearBool, highlightOnSelect, singleBool)
 	singleSearch = singleBool;
 }
 
+chrome.extension.sendRequest({command:"getSettings"},
+    function(response)
+    {
+        updateBooleans(response.clearBetweenSelect, response.highlightOnSelect, response.singleWordSearch);
+    }
+);
 
 

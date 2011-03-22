@@ -69,7 +69,6 @@
 	function sendContextBooleans()
 	{
 		chrome.tabs.executeScript(null, {code:"updateBooleans(" + clearBetweenSelect + "," + highlightOnSelect + "," + singleWordSearch + ")"});
-		chrome.tabs.insertCSS(null, {allFrames:true, code:"span.searchword{background-color:#" + highlightColor + ";color:" + textColor  + "}"});
 	}
 	
 	// Process an incoming request
@@ -147,10 +146,7 @@
 	chrome.contextMenus.create({"title":"Additional Options","contexts":allContextsButSelection, "onclick":openOptions});
 	
 	//Event listeners
-	chrome.tabs.onSelectionChanged.addListener(sendContextBooleans);
-	chrome.tabs.onUpdated.addListener(sendContextBooleans);
 	chrome.extension.onRequest.addListener(processRequest);
 	
-	sendContextBooleans();
 	
 </script>
