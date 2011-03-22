@@ -8,11 +8,14 @@ function colorGenerator(random)
     }
     return function()
     {
+        if (!random)
+            return ["FFFF00", "60,100%,50%"];
+        
         var c = [hexshort(), hexshort(), hexshort()];
         var d = rgbToHsl(c[0], c[1], c[2]);
         c = [c[0].toString(16),c[1].toString(16),c[2].toString(16)]
         var e = [~~(d[0]*255), 100 + "%", 70 + "%"];
-        return !random ? ["FFFF00", "60,100%,50%"] : [c.join(""), e.join(",")];
+        return [c.join(""), e.join(",")];
     }
 }
 
