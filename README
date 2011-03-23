@@ -17,6 +17,9 @@ Please note, some code is copied from other projects:
 
 Release Notes:
 
+        New in version 0.30:
+                 * Colors alternate when Clear Between Selections is not checked
+
 	New in version 0.27:
 		 * Ignores right click to eliminate odd behavior associated with CTRL key
 		 * Code optimizations
