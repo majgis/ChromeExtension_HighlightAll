@@ -10,6 +10,30 @@ var cssstr = "";
 //Listener to highlight on selection
 document.onmouseup = highlightSelection;
 
+//Listener for incoming requests
+chrome.extension.onRequest.addListener(processRequest)
+
+// Handle incoming requests
+function processRequest(request, sender, sendResponse)
+{
+	switch(request.command)
+	{
+		case "highlight":
+			highlightSelection();
+			break;
+			
+		case "clearHighlights":
+			clearHighlightsOnPage();
+			break;
+			
+		case "updateBooleans":
+			var value = request.value;
+			updateBooleans(value[0], value[1], value[2])
+			break;
+	}
+	
+}
+
 function updateStyleNode(str) {
     stylenode = typeof(stylenode) != 'undefined' ? stylenode : document.getElementsByTagName('head')[0].appendChild(document.createElement('style'));
     stylenode.innerHTML = str;
@@ -81,11 +105,11 @@ function updateBooleans(clearBool, highlightOnSelect, singleBool)
 	singleSearch = singleBool;
 }
 
-chrome.extension.sendRequest({command:"getSettings"},
-    function(response)
-    {
-        updateBooleans(response.clearBetweenSelect, response.highlightOnSelect, response.singleWordSearch);
-    }
-);
+function processResponse(response)
+{
+	updateBooleans(response.clearBetweenSelect, response.highlightOnSelect, response.singleWordSearch);
+}
+
+chrome.extension.sendRequest({command:"getSettings"},processResponse);
 
 
