@@ -1,7 +1,7 @@
 {
 	"version": "0.31",
 	"name": "Highlight All",
-	"description": "Highlight all text in an html page matching the current selection.",
+	"description": "Highlight all text matching the current selection.",
 
 	"update_url": "http://clients2.google.com/service/update2/crx",
 	"background_page": "htm/background.htm",
