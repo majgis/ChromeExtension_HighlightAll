@@ -24,18 +24,16 @@
 		localStorage["clearBetweenSelect"] = 'true';
 	}
 	
-	
-	
 	//Highlight all occurances of selection in current tab
 	function highlight()
 	{
-		chrome.tabs.executeScript(null, {code:"highlightSelection()"});	
+		chrome.extension.sendRequest({command:"highlight"}, null);
 	}
 	
 	//Clear all highlights in current tab
 	function clear()
 	{
-		chrome.tabs.executeScript(null, {code:"clearHighlightsOnPage()"});
+		chrome.extension.sendRequest({command:"clearHighlights"},null)
 	}
 	
 	//Toggle highlight on selection
@@ -68,7 +66,7 @@
 	//Send settings to current tab
 	function sendContextBooleans()
 	{
-		chrome.tabs.executeScript(null, {code:"updateBooleans(" + clearBetweenSelect + "," + highlightOnSelect + "," + singleWordSearch + ")"});
+		chrome.extension.sendRequest({command:"clearHighlights",value:[clearBetweenSelect, highlightOnSelect, singleWordSearch]},null)
 	}
 	
 	// Process an incoming request

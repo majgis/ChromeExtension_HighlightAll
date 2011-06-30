@@ -1,5 +1,5 @@
 {
-	"version": "0.30",
+	"version": "0.31",
 	"name": "Highlight All",
 	"description": "Highlight all text in an html page matching the current selection.",
 
@@ -9,6 +9,7 @@
 
 	"browser_action": 
 	{
+		"all_frames": true,
 		"default_icon": "img/hl_16.png",
 		"default_title": "Settings",
 		"popup": "htm/popup.htm"
@@ -18,7 +19,7 @@
 	[{
 		"css": [ "css/select.css" ],
 		"js": [ "js/colorgen.js", "js/select.js", "js/searchhi_slim.js" ],
-		"matches": [ "http://*/*", "https://*/*" ],
+		"matches": [ "\u003Call_urls\u003E" ],
 		"run_at": "document_end"
 	}],
 	
@@ -33,9 +34,9 @@
 	"permissions": 
 	[ 
 		"contextMenus", 
-		"tabs", 
+		"tabs",
 		"http://*/*", 
-		"https://*/*", 
-		"*://*/*" 
+		"https://*/*",
+		"file:///*"
 	]
 }
