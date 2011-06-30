@@ -136,7 +136,7 @@
 	chrome.contextMenus.create({"title": "Clear highlights", "contexts":allContextsButSelection, "onclick": clear});
 	chrome.contextMenus.create({"type":"separator", "contexts":allContextsButSelection })
 	
-	highlightOnSelectId = chrome.contextMenus.create({"title": "Auto Highlight Selection", "contexts":allContextsButSelection, "type": "checkbox", "checked":highlightOnSelect, "onclick": toggleHighlighting});
+	highlightOnSelectId = chrome.contextMenus.create({"title": "Auto highlight selection", "contexts":allContextsButSelection, "type": "checkbox", "checked":highlightOnSelect, "onclick": toggleHighlighting});
 	clearBetweenSelectId = chrome.contextMenus.create({"title": "Clear between selections", "contexts":allContextsButSelection, "type":"checkbox", "checked":clearBetweenSelect, "onclick":clearBetweenSelectionClicked});
 	singleWordSearchId = chrome.contextMenus.create({"title": "Split selection into words", "contexts":allContextsButSelection, "type":"checkbox", "checked":singleWordSearch, "onclick":singleWordSearchClicked});
 	chrome.contextMenus.create({"type":"separator", "contexts":allContextsButSelection });
