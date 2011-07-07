@@ -6,36 +6,39 @@ Highlight All - Extension for Google Chrome
 Please note, some code is copied from other projects:
 
 	Highlighting is powered by a modified version of searchhi_slim.js:
-	http://www.tedpavlic.com/post_simple_inpage_highlighting_example.php
+	    http://www.tedpavlic.com/post_simple_inpage_highlighting_example.php
 
 	Color selection is powered by jscolor:
-	http://jscolor.com/
+	    http://jscolor.com/
 	
 	Color conversion:
-	http://mjijackson.com/2008/02/rgb-to-hsl-and-rgb-to-hsv-color-model-conversion-algorithms-in-javascript
+	    http://mjijackson.com/2008/02/rgb-to-hsl-and-rgb-to-hsv-color-model-conversion-algorithms-in-javascript
 
 
 Release Notes:
 
-        New in version 0.30:
-                 * Colors alternate when Clear Between Selections is not checked
+	0.32:
+        * Support for files
+		
+    0.30:
+        * Colors alternate when Clear Between Selections is not checked
 
-	New in version 0.27:
-		 * Ignores right click to eliminate odd behavior associated with CTRL key
-		 * Code optimizations
+	0.27:
+		* Ignores right click to eliminate odd behavior associated with CTRL key
+		* Code optimizations
 
-	New in version 0.26:
-		 * Hold ctrl key to temporarily enable "Highlight on Selection" when it is not checked
-		 * Fixed 0.25 bug where "Highlight Selection" action did not work.
+	0.26:
+		* Hold ctrl key to temporarily enable "Highlight on Selection" when it is not checked
+		* Fixed 0.25 bug where "Highlight Selection" action did not work.
 
-	New in version 0.25:
-		 * Hold ctrl key to disable highlighting when "Highlight on Selection" is checked.
-		 * The selection will not clear if the same selection is made twice.
+	0.25:
+		* Hold ctrl key to disable highlighting when "Highlight on Selection" is checked.
+		* The selection will not clear if the same selection is made twice.
 
-	New in version 0.24:
-		 * Search for full selection(splitting selection into separate words is an option)
-		 * Separate word highlighting limited to 25 to prevent browser from crashing.
-		 * All settings are stored between sessions
-		 * Command button in toolbar with same options as context menu
-		 * Options page where the highlight color can be set (text color is automatic)
-		 * Settings in context menu are always available, even when right-clicking selection 
+	0.24:
+		* Search for full selection(splitting selection into separate words is an option)
+		* Separate word highlighting limited to 25 to prevent browser from crashing.
+		* All settings are stored between sessions
+		* Command button in toolbar with same options as context menu
+		* Options page where the highlight color can be set (text color is automatic)
+		* Settings in context menu are always available, even when right-clicking selection 
