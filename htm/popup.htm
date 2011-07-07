@@ -59,6 +59,9 @@
 		chrome.extension.sendRequest({command:checkBox.id,value:checkBox.checked});	
 	}
 	
+	//Fetch initial settings
+	chrome.extension.sendRequest({command:"getSettings"}, loadSettings);
+	
 </script>
 <div>
 	<input style="width:100%" type="button" value="Highlight Selection" id="highlightSelection" onclick="buttonClicked(this)"/><br/>
