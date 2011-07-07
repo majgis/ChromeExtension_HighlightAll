@@ -1,11 +1,10 @@
 {
-	"version": "0.32",
+	"version": "0.33",
 	"name": "Highlight All",
 	"description": "Highlight all text matching the current selection.",
 
 	"update_url": "http://clients2.google.com/service/update2/crx",
 	"background_page": "htm/background.htm",
-	"options_page": "htm/options.htm",
 
 	"browser_action": 
 	{
