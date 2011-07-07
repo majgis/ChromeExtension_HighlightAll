@@ -8,6 +8,8 @@
 	var highlightColor = localStorage["highlightColor"];
 	var textColor = localStorage["textColor"];
 	
+	var messages = [];
+	
 	if (highlightColor == undefined)
 	{
 		highlightColor = "ff0";
@@ -27,17 +29,19 @@
 	//Highlight all occurances of selection in current tab
 	function highlight()
 	{
-		chrome.extension.sendRequest({command:"highlight"}, null);
+		messages.push({command:"highlight"});
+		getCurrentTabAndSendMessages();
 	}
 	
 	//Clear all highlights in current tab
 	function clear()
 	{
-		chrome.extension.sendRequest({command:"clearHighlights"},null)
+		messages.push({command:"clearHighlights"});
+		getCurrentTabAndSendMessages();
 	}
 	
 	//Toggle highlight on selection
-	function toggleHighlighting(info, tab)
+	function toggleAutoHighlight(info, tab)
 	{
 		value = info.checked;
 		highlightOnSelect = value;
@@ -66,9 +70,25 @@
 	//Send settings to current tab
 	function sendContextBooleans()
 	{
-		chrome.extension.sendRequest({command:"clearHighlights",value:[clearBetweenSelect, highlightOnSelect, singleWordSearch]},null)
+		messages.push({command:"updateBooleans",value:[clearBetweenSelect, highlightOnSelect, singleWordSearch]});
+		getCurrentTabAndSendMessages();
 	}
-	
+  
+    function getCurrentTabAndSendMessages()
+    {
+    	chrome.tabs.getSelected(null, sendMessagesToTab)
+    }
+  
+  	function sendMessagesToTab(tab)
+  	{
+  		for (i in messages)
+  		{
+  			chrome.tabs.sendRequest(tab.id, messages[i], null)
+  		}
+  		
+  		messages = [];
+  	}
+  	
 	// Process an incoming request
 	function processRequest(request, sender, sendResponse) 
 	{
@@ -81,7 +101,7 @@
 				break;
 				
 			case("highlightOnSelect"):
-				toggleHighlighting(obj);
+				toggleAutoHighlight(obj);
 				chrome.contextMenus.update(highlightOnSelectId, obj);
 				break;
 			
@@ -136,9 +156,9 @@
 	chrome.contextMenus.create({"title": "Clear highlights", "contexts":allContextsButSelection, "onclick": clear});
 	chrome.contextMenus.create({"type":"separator", "contexts":allContextsButSelection })
 	
-	highlightOnSelectId = chrome.contextMenus.create({"title": "Highlight on selection", "contexts":allContextsButSelection, "type": "checkbox", "checked":highlightOnSelect, "onclick": toggleHighlighting});
+	highlightOnSelectId = chrome.contextMenus.create({"title": "Auto highlight selection", "contexts":allContextsButSelection, "type": "checkbox", "checked":highlightOnSelect, "onclick": toggleAutoHighlight});
 	clearBetweenSelectId = chrome.contextMenus.create({"title": "Clear between selections", "contexts":allContextsButSelection, "type":"checkbox", "checked":clearBetweenSelect, "onclick":clearBetweenSelectionClicked});
-	singleWordSearchId = chrome.contextMenus.create({"title": "Single word search", "contexts":allContextsButSelection, "type":"checkbox", "checked":singleWordSearch, "onclick":singleWordSearchClicked});
+	singleWordSearchId = chrome.contextMenus.create({"title": "Split selection into words", "contexts":allContextsButSelection, "type":"checkbox", "checked":singleWordSearch, "onclick":singleWordSearchClicked});
 	chrome.contextMenus.create({"type":"separator", "contexts":allContextsButSelection });
 
 	chrome.contextMenus.create({"title":"Additional Options","contexts":allContextsButSelection, "onclick":openOptions});
