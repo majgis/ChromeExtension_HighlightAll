@@ -18,28 +18,28 @@ Please note, some code is copied from other projects:
 Release Notes:
 
 	0.33:
-        * Support for files (Chrome does not currently support context menu for files)
-        * Options page was removed until issue with custom highlight color is resolved
+            * Support for files (Chrome does not currently support context menu for files)
+            * Options page was removed until issue with custom highlight color is resolved
 		
-    0.30:
-        * Colors alternate when Clear Between Selections is not checked
+        0.30:
+            * Colors alternate when Clear Between Selections is not checked
 
 	0.27:
-		* Ignores right click to eliminate odd behavior associated with CTRL key
-		* Code optimizations
+	    * Ignores right click to eliminate odd behavior associated with CTRL key
+	    * Code optimizations
 
 	0.26:
-		* Hold ctrl key to temporarily enable "Highlight on Selection" when it is not checked
-		* Fixed 0.25 bug where "Highlight Selection" action did not work.
+	    * Hold ctrl key to temporarily enable "Highlight on Selection" when it is not checked
+	    * Fixed 0.25 bug where "Highlight Selection" action did not work.
 
 	0.25:
-		* Hold ctrl key to disable highlighting when "Highlight on Selection" is checked.
-		* The selection will not clear if the same selection is made twice.
+	    * Hold ctrl key to disable highlighting when "Highlight on Selection" is checked.
+	    * The selection will not clear if the same selection is made twice.
 
 	0.24:
-		* Search for full selection(splitting selection into separate words is an option)
-		* Separate word highlighting limited to 25 to prevent browser from crashing.
-		* All settings are stored between sessions
-		* Command button in toolbar with same options as context menu
-		* Options page where the highlight color can be set (text color is automatic)
-		* Settings in context menu are always available, even when right-clicking selection 
+	    * Search for full selection(splitting selection into separate words is an option)
+	    * Separate word highlighting limited to 25 to prevent browser from crashing.
+	    * All settings are stored between sessions
+	    * Command button in toolbar with same options as context menu
+	    * Options page where the highlight color can be set (text color is automatic)
+	    * Settings in context menu are always available, even when right-clicking selection 
