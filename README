@@ -18,10 +18,10 @@ Please note, some code is copied from other projects:
 Release Notes:
 
 	0.32:
-        * Support for files
+                * Support for files
 		
-    0.30:
-        * Colors alternate when Clear Between Selections is not checked
+        0.30:
+                * Colors alternate when Clear Between Selections is not checked
 
 	0.27:
 		* Ignores right click to eliminate odd behavior associated with CTRL key
