@@ -18,7 +18,7 @@ Please note, some code is copied from other projects:
 Release Notes:
 
 	0.33:
-        * Support for files
+        * Support for files (Chrome does not currently support context menu for files)
         * Options page was removed until issue with custom highlight color is resolved
 		
     0.30:
