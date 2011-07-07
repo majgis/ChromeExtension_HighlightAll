@@ -134,7 +134,8 @@
 				sendResponse({clearBetweenSelect:clearBetweenSelect,
 								highlightOnSelect:highlightOnSelect,
 								singleWordSearch:singleWordSearch,
-								highlightColor:highlightColor});
+								highlightColor:highlightColor,
+								textColor:textColor});
 				return;
 								
 		}
@@ -159,9 +160,7 @@
 	highlightOnSelectId = chrome.contextMenus.create({"title": "Auto highlight selection", "contexts":allContextsButSelection, "type": "checkbox", "checked":highlightOnSelect, "onclick": toggleAutoHighlight});
 	clearBetweenSelectId = chrome.contextMenus.create({"title": "Clear between selections", "contexts":allContextsButSelection, "type":"checkbox", "checked":clearBetweenSelect, "onclick":clearBetweenSelectionClicked});
 	singleWordSearchId = chrome.contextMenus.create({"title": "Split selection into words", "contexts":allContextsButSelection, "type":"checkbox", "checked":singleWordSearch, "onclick":singleWordSearchClicked});
-	chrome.contextMenus.create({"type":"separator", "contexts":allContextsButSelection });
 
-	chrome.contextMenus.create({"title":"Additional Options","contexts":allContextsButSelection, "onclick":openOptions});
 	
 	//Event listeners
 	chrome.extension.onRequest.addListener(processRequest);

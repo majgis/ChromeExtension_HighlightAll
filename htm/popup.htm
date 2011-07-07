@@ -59,11 +59,7 @@
 		chrome.extension.sendRequest({command:checkBox.id,value:checkBox.checked});	
 	}
 	
-	//Open options tab
-	function openOptions()
-	{
-		chrome.tabs.create({url:"chrome-extension://fgnkddoolcfhpoccklnhlpdellmpjbnm/htm/options.htm"});
-	}
+	//Fetch initial settings
 	chrome.extension.sendRequest({command:"getSettings"}, loadSettings);
 	
 </script>
@@ -76,8 +72,5 @@
 	<input type="checkbox" id="highlightOnSelect" onclick="checkboxClicked(this)"/>Auto Highlight Selection<br/>
 	<input type="checkbox" id="clearBetweenSelect" onclick="checkboxClicked(this)"/>Clear Between Selections<br/>
 	<input type="checkbox" id="singleWordSearch" onclick="checkboxClicked(this)"/>Split Selection into Words<br/>
-	
-	<hr/>
-	
-	<div class="center"><a href="javascript:openOptions()">Additional Options</a></div>
+
 </div>
