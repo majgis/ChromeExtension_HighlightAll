@@ -34,7 +34,8 @@ function processRequest(request, sender, sendResponse)
 	
 }
 
-function updateStyleNode(str) {
+function updateStyleNode(str) 
+{
     stylenode = typeof(stylenode) != 'undefined' ? stylenode : document.getElementsByTagName('head')[0].appendChild(document.createElement('style'));
     stylenode.innerHTML = str;
 }
