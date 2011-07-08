@@ -1,4 +1,5 @@
-//Highlight all occurrances of the current selection
+// Loaded by each tab, communicates with background.htm, makes calls to searchhi_slim.js
+//
 //references:  http://javascript.about.com/library/blhilite2.htm
 
 var clearBetweenSelections = true;
@@ -34,6 +35,7 @@ function processRequest(request, sender, sendResponse)
 	
 }
 
+// Insert str into stylenode; create style node if it does not exist
 function updateStyleNode(str) 
 {
     stylenode = typeof(stylenode) != 'undefined' ? stylenode : document.getElementsByTagName('head')[0].appendChild(document.createElement('style'));
@@ -106,11 +108,12 @@ function updateBooleans(clearBool, highlightOnSelect, singleBool)
 	singleSearch = singleBool;
 }
 
-function processResponse(response)
+// Update settings
+function processGetSettings(response)
 {
 	updateBooleans(response.clearBetweenSelect, response.highlightOnSelect, response.singleWordSearch);
 }
 
-chrome.extension.sendRequest({command:"getSettings"},processResponse);
+chrome.extension.sendRequest({command:"getSettings"},processGetSettings);
 
 

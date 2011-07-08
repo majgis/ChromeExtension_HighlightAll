@@ -165,5 +165,8 @@
 	//Event listeners
 	chrome.extension.onRequest.addListener(processRequest);
 	
+	// Context menu booleans, when changed, are only sent to the visible tab
+	// To avoid making requests for every highlight event, tabs are automaticlly updated when they come into view
+	chrome.tabs.onSelectionChanged.addListener(sendContextBooleans);
 	
 </script>
