@@ -1,21 +1,44 @@
-// Main engine for highlighting
+/* Main content for highlighting
+ * 
+ * Highlighting is powered by a modified version of searchhi_slim.js:
+ *      http://www.tedpavlic.com/post_simple_inpage_highlighting_example.php
+ * 
+ * Color conversion:
+ * 	    http://mjijackson.com/2008/02/rgb-to-hsl-and-rgb-to-hsv-color-model-conversion-algorithms-in-javascript
+ * 
+ */
 
+// Returns function that generates color values
+// random: boolean to determine if function returned generates random colors
 function colorGenerator(random)
 {
-    function hexshort() 
+	
+    // Function to return random values
+    if (random)
     {
-        return ((~~(Math.random()*0x10))<<4) | (~~(Math.random()*0x10));
+    	function hexshort() 
+	    {
+	        return ((~~(Math.random()*0x10))<<4) | (~~(Math.random()*0x10));
+	    }
+    	
+    	return function()
+    	{
+        	var c = [hexshort(), hexshort(), hexshort()];
+        	var d = rgbToHsl(c[0], c[1], c[2]);
+        	c = [c[0].toString(16),c[1].toString(16),c[2].toString(16)]
+        	var e = [~~(d[0]*255), "100%,70%"];
+        	
+        	return [c.join(""), e.join(",")];
+        }
     }
-    return function()
+    
+    //Function to return fixed value
+    else
     {
-        if (!random)
-            return ["FFFF00", "60,100%,50%"];
-        
-        var c = [hexshort(), hexshort(), hexshort()];
-        var d = rgbToHsl(c[0], c[1], c[2]);
-        c = [c[0].toString(16),c[1].toString(16),c[2].toString(16)]
-        var e = [~~(d[0]*255), 100 + "%", 70 + "%"];
-        return [c.join(""), e.join(",")];
+    	return function()
+    	{
+        	return ["FFFF00", "60,100%,50%"];
+        }
     }
 }
 
@@ -51,28 +74,36 @@ function stripVowelAccent(str)
  *   http://www.tedpavlic.com/post_inpage_highlighting_example.php 
  * for additional modifications of this base code. 
  */
-function highlightWord(node,word,doc) {
-     doc = typeof(doc) != 'undefined' ? doc : document;
+function highlightWord(node, word, doc) 
+{
+    doc = typeof(doc) != 'undefined' ? doc : document;
     var hinodes = [], coll;
+	
 	// Iterate into this nodes childNodes
-	if (node.hasChildNodes) {
+	if (node.hasChildNodes) 
+	{
 		var hi_cn;
-		for (hi_cn=0;hi_cn<node.childNodes.length;hi_cn++) {
+		for (hi_cn=0; hi_cn < node.childNodes.length; hi_cn++) 
+		{
 			coll = highlightWord(node.childNodes[hi_cn],word,doc);
 			hinodes = hinodes.concat(coll);
 		}
 	}
 
 	// And do this node itself
-	if (node.nodeType == 3) { // text node
+	if (node.nodeType == 3) // text node
+	{ 
 		tempNodeVal = stripVowelAccent(node.nodeValue.toLowerCase());
 		tempWordVal = stripVowelAccent(word.toLowerCase());
-		if (tempNodeVal.indexOf(tempWordVal) != -1) {
+		if (tempNodeVal.indexOf(tempWordVal) != -1) 
+		{
 			pn = node.parentNode;
-			if (!/^searchword.*$/.test(pn.className)) {
+			if (!/^searchword.*$/.test(pn.className)) 
+			{
 				// word has not already been highlighted!
 				nv = node.nodeValue;
 				ni = tempNodeVal.indexOf(tempWordVal);
+				
 				// Create a load of replacement nodes
 				before = doc.createTextNode(nv.substr(0,ni));
 				docWordVal = nv.substr(ni,word.length);
@@ -92,19 +123,24 @@ function highlightWord(node,word,doc) {
 	return hinodes;
 }
 
-function unhighlight(node) {
+function unhighlight(node) 
+{
 	// Iterate into this nodes childNodes
-	if (node.hasChildNodes) {
+	if (node.hasChildNodes) 
+	{
 		var hi_cn;
-		for (hi_cn=0;hi_cn<node.childNodes.length;hi_cn++) {
+		for (hi_cn=0;hi_cn<node.childNodes.length;hi_cn++) 
+		{
 			unhighlight(node.childNodes[hi_cn]);
 		}
 	}
 
 	// And do this node itself
-	if (node.nodeType == 3) { // text node
+	if (node.nodeType == 3) // text node
+	{ 
 		pn = node.parentNode;
-		if (/^searchword.*$/.test(pn.className)) {
+		if (/^searchword.*$/.test(pn.className))
+		{
 			prevSib = pn.previousSibling;
 			nextSib = pn.nextSibling;
 			nextSib.nodeValue = prevSib.nodeValue + node.nodeValue + nextSib.nodeValue;
