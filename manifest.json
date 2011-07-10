@@ -16,7 +16,6 @@
    
 	"content_scripts": 	
 	[{
-		"css": [ "css/select.css" ],
 		"js": [ "js/colorgen.js", "js/select.js", "js/searchhi_slim.js" ],
 		"matches": [ "\u003Call_urls\u003E" ],
 		"run_at": "document_end"
