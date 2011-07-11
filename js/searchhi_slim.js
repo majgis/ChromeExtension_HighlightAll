@@ -26,7 +26,7 @@ function colorGenerator(random)
         	var c = [hexshort(), hexshort(), hexshort()];
         	var d = rgbToHsl(c[0], c[1], c[2]);
         	c = [c[0].toString(16),c[1].toString(16),c[2].toString(16)]
-        	var e = [~~(d[0]*255), "100%,70%"];
+        	var e = [~~(d[0]*255), "100%,78%"];
         	
         	return [c.join(""), e.join(",")];
         }
@@ -150,7 +150,7 @@ function unhighlight(node)
 	}
 }
 
-
+//Entry point from select.js
 function localSearchHighlight(searchStr, singleWordSearch, doc) 
 {
 	var MAX_WORDS = 100; //limit for words to search, if unlimited, browser may crash
@@ -219,9 +219,10 @@ function localSearchHighlight(searchStr, singleWordSearch, doc)
             
             for (x=0; x < hinodes.length; x++) 
             {
-                hinodes[x].className += col[0];
+                hinodes[x].className += col[0]; //className is .searchword
             }
             
+            // class names look like this:  .searchwordFFFF00 
             cssstr += cssstr.indexOf(col[0]) == -1 ? ".searchword" + col[0] + "{background-color:hsl(" + col[1] + ")}" : "";
         }
 	}
