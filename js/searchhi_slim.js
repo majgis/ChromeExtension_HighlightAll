@@ -153,7 +153,7 @@ function unhighlight(node)
 //Entry point from select.js
 function localSearchHighlight(searchStr, singleWordSearch, doc) 
 {
-	var MAX_WORDS = 100; //limit for words to search, if unlimited, browser may crash
+	var MAX_WORDS = 50; //limit for words to search, if unlimited, browser may crash
     doc = typeof(doc) != 'undefined' ? doc : document;
 	
 	if (!doc.createElement) 
