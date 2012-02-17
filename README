@@ -17,6 +17,11 @@ Please note, some code is copied from other projects:
 
 Release Notes:
 
+  0.35:
+    * Removed unnecessary files
+    * Maximum words reduced to 50
+    * Lightened random colors
+
   0.34:
     * Repaired issue where options were not being applied when tabs changed
     * Corrected word limit safeguard to prevent browser from crashing
