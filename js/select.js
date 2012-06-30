@@ -77,6 +77,10 @@ function highlightSelection(e)
         }
     }
     
+    if (selection.anchorNode.nodeType != 3) {
+        return;
+    }
+    
     var selectedText = selection.toString().replace(/^\s+|\s+$/g, "");
     var testText = selectedText.toLowerCase();
     
@@ -127,8 +131,7 @@ function processGetSettings(response)
     updateBooleans(response.clearBetweenSelect, response.highlightOnSelect, response.singleWordSearch);
 }
 
-    chrome.extension.sendRequest({command:"getSettings"},processGetSettings);
-
+chrome.extension.sendRequest({command:"getSettings"},processGetSettings);
 
 
 /* Main content for highlighting
@@ -372,4 +375,4 @@ function localSearchHighlight(searchStr, singleWordSearch, doc)
             selection.addRange(reselectRange);
         //}
     }
-};
+}
