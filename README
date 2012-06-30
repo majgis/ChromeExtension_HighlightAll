@@ -14,6 +14,11 @@ Please note, some code is copied from other projects:
 
 Release Notes:
 
+  0.36:
+    * A mouse click now clears the highlight (uncheck "clear between selections"
+      if you need it to persist)
+    * The browser's selection will not be lost, so you can easily copy the text 
+
   0.35:
     * Removed unnecessary files
     * Maximum words reduced to 50
