@@ -7,15 +7,17 @@ Please note, some code is copied from other projects:
 
 	Highlighting is powered by a modified version of searchhi_slim.js:
 	    http://www.tedpavlic.com/post_simple_inpage_highlighting_example.php
-
-	Color selection is powered by jscolor:
-	    http://jscolor.com/
 	
 	Color conversion:
 	    http://mjijackson.com/2008/02/rgb-to-hsl-and-rgb-to-hsv-color-model-conversion-algorithms-in-javascript
 
 
 Release Notes:
+
+  0.36:
+    * A mouse click now clears the highlight (uncheck "clear between selections"
+      if you need it to persist)
+    * The browser's selection will not be lost, so you can easily copy the text 
 
   0.35:
     * Removed unnecessary files
