@@ -12,9 +12,19 @@ var lastText = "";
 var imedBool = false;
 var highlightedPage = false;
 var select;
+var triggeredOnce = false;
 
 //Listener to highlight on selection
 document.onmouseup = highlightSelection;
+document.onmousedown = function(event){
+    if (event != undefined) {
+        if (triggeredOnce && event.button == 2) {
+            event.preventDefault();
+            event.stopImmediatePropagation();
+        }
+    }
+};
+//document.onselectionchange = function(){if (window.getSelection().toString() != '') {console.log("changed to " + window.getSelection().toString());}};
 
 //Listener for incoming requests
 chrome.extension.onRequest.addListener(processRequest)
@@ -101,11 +111,6 @@ Color.prototype = {
 function highlightSelection(e) 
 {
     selection = window.getSelection();
-    // Clear all highlights if requested
-    if (clearBetweenSelections && highlightedPage == true)
-    {
-        clearHighlightsOnPage();
-    }
     
     //Skip this section if mouse event is undefined
     if (e != undefined)
@@ -128,6 +133,23 @@ function highlightSelection(e)
         {
             return;
         }
+    }
+    
+    var selectionTagName;
+    //Avoid inputs like the plague..
+    try {
+        selectionTagName = selection.anchorNode.childNodes[0].tagName.toLowerCase();
+    } catch (err) {
+        //fail silently :-D
+    }
+    if (selectionTagName == "input") {
+        return;
+    }
+    
+    // Clear all highlights if requested
+    if (clearBetweenSelections && highlightedPage == true)
+    {
+        clearHighlightsOnPage();
     }
     
     var selectedText = window.getSelection().toString().replace(/^\s+|\s+$/g, "");
@@ -159,6 +181,11 @@ function highlightSelection(e)
     
     //Store processed selection for next time this method is called
     lastText = testText;
+    if (selection.toString() != '') {
+        if (!triggeredOnce) {
+            triggeredOnce = !triggeredOnce;
+        }
+    }
 }
 
 function highlight(color) {
@@ -206,7 +233,6 @@ function processGetSettings(response)
 }
 
 chrome.extension.sendRequest({command:"getSettings"},processGetSettings);
-
 /* Main content for highlighting
  * 
  * Highlighting is powered by a modified version of searchhi_slim.js:
