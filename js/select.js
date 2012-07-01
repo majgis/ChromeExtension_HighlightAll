@@ -2,12 +2,16 @@
 //
 //references:  http://javascript.about.com/library/blhilite2.htm
 
+/* Uses modified version of very helpful scripts from Tim Down @ stackoverflow.com
+ *      http://stackoverflow.com/questions/8076341/remove-highlight-added-to-selected-text-using-javascript?rq=1
+ */
+
 var clearBetweenSelections = true;
 var singleSearch = false;
 var lastText = "";
 var imedBool = false;
-var cssstr = "";
-var selection;
+var highlightedPage = false;
+var select;
 
 //Listener to highlight on selection
 document.onmouseup = highlightSelection;
@@ -36,20 +40,69 @@ function processRequest(request, sender, sendResponse)
     
 }
 
-// Insert str into stylenode; create style node if it does not exist
-function updateStyleNode(str) 
-{
-    stylenode = typeof(stylenode) != 'undefined' ? stylenode : document.getElementsByTagName('head')[0].appendChild(document.createElement('style'));
-    stylenode.innerHTML = str;
+function componentFromStr(numStr, percent) {
+    var num = Math.max(0, parseInt(numStr, 10));
+    return percent ? Math.floor(255 * Math.min(100, num) / 100) : Math.min(255, num);
 }
+
+var rgbRegex = /^rgb\(\s*(-?\d+)(%?)\s*,\s*(-?\d+)(%?)\s*,\s*(-?\d+)(%?)\s*\)$/,
+    hexRegex = /^#?([a-f\d]{6})$/,
+    shortHexRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/;
+
+function Color(r, g, b) {
+    // Make a new Color object even when Color is not called with the new operator
+    if (!(this instanceof Color)) {
+        return new Color(r, g, b);
+    }
+
+    if (typeof g == "undefined") {
+        // Parse the color string
+        var colStr = r.toLowerCase(), result;
+
+        // Check for hex value first, the short hex value, then rgb value
+        if ( (result = hexRegex.exec(colStr)) ) {
+            var hexNum = parseInt(result[1], 16);
+            r = hexNum >> 16;
+            g = (hexNum & 0xff00) >> 8;
+            b = hexNum & 0xff;
+        } else if ( (result = shortHexRegex.exec(colStr)) ) {
+            r = parseInt(result[1] + result[1], 16);
+            g = parseInt(result[2] + result[2], 16);
+            b = parseInt(result[3] + result[3], 16);
+        } else if ( (result = rgbRegex.exec(colStr)) ) {
+            r = componentFromStr(result[1], result[2]);
+            g = componentFromStr(result[3], result[4]);
+            b = componentFromStr(result[5], result[6]);
+        } else if (colStr == "transparent") {
+            r = -1;
+            g = -1;
+            b = -1;
+        } else {
+            //throw new Error("Color: Unable to parse color string '" + colStr + "'");
+            //why do that? it just kills the javascript...
+            r = -1;
+            g = -1;
+            b = -1;
+        }
+    }
+
+    this.r = r;
+    this.g = g;
+    this.b = b;
+}
+
+Color.prototype = {
+    equals: function(color) {
+        return this.r == color.r && this.g == color.g && this.b == color.b;
+    }
+};
 
 //Highlight all occurances of the current selection
 function highlightSelection(e) 
 {
     selection = window.getSelection();
-    
     // Clear all highlights if requested
-    if (clearBetweenSelections)
+    if (clearBetweenSelections && highlightedPage == true)
     {
         clearHighlightsOnPage();
     }
@@ -77,11 +130,7 @@ function highlightSelection(e)
         }
     }
     
-    if (selection.anchorNode.nodeType != 3) {
-        return;
-    }
-    
-    var selectedText = selection.toString().replace(/^\s+|\s+$/g, "");
+    var selectedText = window.getSelection().toString().replace(/^\s+|\s+$/g, "");
     var testText = selectedText.toLowerCase();
     
     //Exit if selection is whitespace or what was previously selected
@@ -90,7 +139,7 @@ function highlightSelection(e)
         return;
     }
     
-    if (selection.anchorNode.nodeType == 3 && selection.toString() != '') { // text node
+    if (selection.toString() != '') {
         var mySpan = document.createElement("span");
         var prevSpan = document.getElementById("mySelectedSpan");
         if (prevSpan != null) {
@@ -98,24 +147,49 @@ function highlightSelection(e)
         }
         mySpan.id = "mySelectedSpan";
         var range = selection.getRangeAt(0).cloneRange();
-        range.surroundContents(mySpan);
+        mySpan.appendChild(range.extractContents());
+        range.insertNode(mySpan);
     }
     
     //Perform highlighting
+    document.designMode = "on";
     localSearchHighlight(selectedText, singleSearch);
+    highlightedPage = true;
+    document.designMode = "off";
     
     //Store processed selection for next time this method is called
     lastText = testText;
 }
 
+function highlight(color) {
+    color = "ffff00"; //just make it always yellow (that's what we want for now)
+    document.execCommand("BackColor", false, color);
+}
 
 // Clears all highlights on the page
 function clearHighlightsOnPage()
 {
-    unhighlight(document.getElementsByTagName('body')[0]);
-    cssstr = "";
-    updateStyleNode(cssstr);
+    unhighlight(document.getElementsByTagName('body')[0], "ffff00");
+    highlightedPage = false;
     lastText = "";
+}
+
+function unhighlight(node, color) {
+    if (!(color instanceof Color)) {
+        color = new Color(color);
+    }
+
+    if (node.nodeType == 1) {
+        var bg = node.style.backgroundColor;
+        if (bg && color.equals(new Color(bg))) {
+            node.style.backgroundColor = "";
+        }
+    }
+    var child = node.firstChild;
+    while (child) {
+        unhighlight(child, color);
+        child = child.nextSibling;
+    }
 }
 
 function updateBooleans(clearBool, highlightOnSelect, singleBool)
@@ -133,50 +207,15 @@ function processGetSettings(response)
 
 chrome.extension.sendRequest({command:"getSettings"},processGetSettings);
 
-
 /* Main content for highlighting
  * 
  * Highlighting is powered by a modified version of searchhi_slim.js:
  *      http://www.tedpavlic.com/post_simple_inpage_highlighting_example.php
- * 
- * Color conversion:
- *         http://mjijackson.com/2008/02/rgb-to-hsl-and-rgb-to-hsv-color-model-conversion-algorithms-in-javascript
- * 
+ * as well as very helpful scripts from Tim Down @ stackoverflow.com
+ *      http://stackoverflow.com/questions/8076341/remove-highlight-added-to-selected-text-using-javascript?rq=1
  */
 
-// Returns function that generates color values
-// random: boolean to determine if function returned generates random colors
-function colorGenerator(random)
-{
-    
-    // Function to return random values
-    if (random)
-    {
-        function hexshort() 
-        {
-            return ((~~(Math.random()*0x10))<<4) | (~~(Math.random()*0x10));
-        }
-        
-        return function()
-        {
-            var c = [hexshort(), hexshort(), hexshort()];
-            var d = rgbToHsl(c[0], c[1], c[2]);
-            c = [c[0].toString(16),c[1].toString(16),c[2].toString(16)]
-            var e = [~~(d[0]*255), "100%,78%"];
-            
-            return [c.join(""), e.join(",")];
-        }
-    }
-    
-    //Function to return fixed value
-    else
-    {
-        return function()
-        {
-            return ["FFFF00", "60,100%,50%"];
-        }
-    }
-}
+var highlightRange = document.createRange();
 
 /* New from Rob Nitti, who credits 
  * http://bytes.com/groups/javascript/145532-replace-french-characters-form-inp
@@ -202,7 +241,7 @@ function stripVowelAccent(str)
 
     return str;
 }
-var mytester = 0;
+
 /* Modification of 
  * http://www.kryogenix.org/code/browser/searchhi/ 
  * See: 
@@ -230,61 +269,21 @@ function highlightWord(node, word, doc)
     { 
         tempNodeVal = stripVowelAccent(node.nodeValue.toLowerCase());
         tempWordVal = stripVowelAccent(word.toLowerCase());
-        if (tempNodeVal.indexOf(tempWordVal) != -1) 
+        ni = tempNodeVal.indexOf(tempWordVal);
+        
+        if (ni != -1) 
         {
-            pn = node.parentNode;
-            if (!/^searchword.*$/.test(pn.className)) 
-            {
-                // word has not already been highlighted!
-    
-                nv = node.nodeValue;
-                ni = tempNodeVal.indexOf(tempWordVal);
-                
-                // Create a load of replacement nodes
-                before = doc.createTextNode(nv.substr(0,ni));
-                docWordVal = nv.substr(ni,word.length);
-                after = doc.createTextNode(nv.substr(ni+word.length));
-                hiwordtext = doc.createTextNode(docWordVal);
-                hiword = doc.createElement("span");
-                hiword.className = "searchword";
-                hiword.appendChild(hiwordtext);
-                pn.insertBefore(before,node);
-                pn.insertBefore(hiword,node);
-                pn.insertBefore(after,node);
-                mytester++;
-                pn.removeChild(node);
-                hinodes.push(hiword);
+            nv = node.nodeValue;
+            highlightRange.setStart(node, ni);
+            highlightRange.setEnd(node, ni+word.length);
+            if (highlightRange) {
+                selection.removeAllRanges();
+                selection.addRange(highlightRange);
             }
+            highlight();
         }
     }
     return hinodes;
-}
-
-function unhighlight(node) 
-{
-    // Iterate into this nodes childNodes
-    if (node.hasChildNodes) 
-    {
-        var hi_cn;
-        for (hi_cn=0;hi_cn<node.childNodes.length;hi_cn++) 
-        {
-            unhighlight(node.childNodes[hi_cn]);
-        }
-    }
-
-    // And do this node itself
-    if (node.nodeType == 3) // text node
-    { 
-        pn = node.parentNode;
-        if (/^searchword.*$/.test(pn.className))
-        {
-            prevSib = pn.previousSibling;
-            nextSib = pn.nextSibling;
-            nextSib.nodeValue = prevSib.nodeValue + node.nodeValue + nextSib.nodeValue;
-            prevSib.nodeValue = '';
-            pn.parentNode.removeChild(pn);
-        }
-    }
 }
 
 //Entry point from select.js
@@ -317,7 +316,6 @@ function localSearchHighlight(searchStr, singleWordSearch, doc)
     }
     
     var hinodes = [];
-    colorGen = colorGenerator(singleWordSearch || !clearBetweenSelections);
     
     for(p=0; p < phrases.length; p++) 
     {
@@ -351,28 +349,13 @@ function localSearchHighlight(searchStr, singleWordSearch, doc)
                 continue;
             }
             
-            col = colorGen();
-            hinodes = highlightWord(doc.getElementsByTagName("body")[0], words[w], doc, col);
-            
-            for (x=0; x < hinodes.length; x++) 
-            {
-                hinodes[x].className += col[0]; //className is .searchword
-            }
-            
-            // class names look like this:  .searchwordFFFF00 
-            cssstr += cssstr.indexOf(col[0]) == -1 ? ".searchword" + col[0] + "{background-color:hsl(" + col[1] + ")}" : "";
+            hinodes = highlightWord(doc.getElementsByTagName("body")[0], words[w], doc);
         }
     }
     
-    if (cssstr.length) 
-    {
-        updateStyleNode(cssstr);
-        selection.removeAllRanges();
-        var oldSelection = document.getElementById("mySelectedSpan");
-        //if (oldSelection != null) {
-            var reselectRange = document.createRange();
-            reselectRange.selectNode(oldSelection);
-            selection.addRange(reselectRange);
-        //}
-    }
+    selection.removeAllRanges();
+    var oldSelection = document.getElementById("mySelectedSpan");
+    var reselectRange = document.createRange();
+    reselectRange.selectNode(oldSelection);
+    selection.addRange(reselectRange);
 }
