@@ -1,7 +1,7 @@
 {
 	"version": "0.36",
 	"name": "Highlight All",
-	"description": "Highlight all text matching the current selection.",
+	"description": "Double click to highlight all occurrences of a word.",
 
 	"update_url": "http://clients2.google.com/service/update2/crx",
 	"background_page": "htm/background.htm",
