@@ -89,7 +89,7 @@ function Color(r, g, b) {
             b = -1;
         } else {
             //throw new Error("Color: Unable to parse color string '" + colStr + "'");
-            //why do that? it just kills the javascript...
+            //why do that^^? it just kills the javascript...
             r = -1;
             g = -1;
             b = -1;
@@ -174,10 +174,8 @@ function highlightSelection(e)
     }
     
     //Perform highlighting
-    document.designMode = "on";
     localSearchHighlight(selectedText, singleSearch);
     highlightedPage = true;
-    document.designMode = "off";
     
     //Store processed selection for next time this method is called
     lastText = testText;
@@ -189,8 +187,9 @@ function highlightSelection(e)
 }
 
 function highlight(color) {
-    color = "ffff00"; //just make it always yellow (that's what we want for now)
+    document.designMode = "on";
     document.execCommand("BackColor", false, color);
+    document.designMode = "off";
 }
 
 // Clears all highlights on the page
@@ -202,21 +201,39 @@ function clearHighlightsOnPage()
 }
 
 function unhighlight(node, color) {
+    //if the passed color string isn't a Color object, convert it
     if (!(color instanceof Color)) {
         color = new Color(color);
     }
-
+    //test to see if we've found an element node that has our same backgroundColor
     if (node.nodeType == 1) {
         var bg = node.style.backgroundColor;
         if (bg && color.equals(new Color(bg))) {
+            //remove background color
             node.style.backgroundColor = "";
+            if (node.tagName.toLowerCase() =="span") {
+                var parentNode = node.parentNode;
+                removeSpanTag(node);
+                unhighlight(parentNode, "ffff00");
+            }
         }
     }
+    //now recurse through all children of the passed node
     var child = node.firstChild;
     while (child) {
         unhighlight(child, color);
         child = child.nextSibling;
     }
+}
+
+//Removes the span tag from the passed node
+//node : must be the element node of the span (the <span> node, not it's textnode contents)
+function removeSpanTag(node) {
+    var spliceText = node.innerHTML;
+    var tempTextNode = document.createTextNode(spliceText);
+    var parentNode = node.parentNode;
+    parentNode.replaceChild(tempTextNode, node);
+    parentNode.normalize;
 }
 
 function updateBooleans(clearBool, highlightOnSelect, singleBool)
@@ -233,6 +250,7 @@ function processGetSettings(response)
 }
 
 chrome.extension.sendRequest({command:"getSettings"},processGetSettings);
+
 /* Main content for highlighting
  * 
  * Highlighting is powered by a modified version of searchhi_slim.js:
@@ -242,6 +260,7 @@ chrome.extension.sendRequest({command:"getSettings"},processGetSettings);
  */
 
 var highlightRange = document.createRange();
+var colorgen;
 
 /* New from Rob Nitti, who credits 
  * http://bytes.com/groups/javascript/145532-replace-french-characters-form-inp
@@ -306,7 +325,7 @@ function highlightWord(node, word, doc)
                 selection.removeAllRanges();
                 selection.addRange(highlightRange);
             }
-            highlight();
+            highlight(colorgen());
         }
     }
     return hinodes;
@@ -342,6 +361,7 @@ function localSearchHighlight(searchStr, singleWordSearch, doc)
     }
     
     var hinodes = [];
+    colorgen = colorGenerator(singleWordSearch || !clearBetweenSelections);
     
     for(p=0; p < phrases.length; p++) 
     {
@@ -384,4 +404,28 @@ function localSearchHighlight(searchStr, singleWordSearch, doc)
     var reselectRange = document.createRange();
     reselectRange.selectNode(oldSelection);
     selection.addRange(reselectRange);
+}
+
+// Returns function that generates color values
+// generateRandom: boolean to determine if function returned generates random colors
+function colorGenerator(generateRandom) {
+    if (generateRandom) {
+        return function() {
+            var c = [hexshort(), hexshort(), hexshort()];
+            c = [c[0].toString(16),c[1].toString(16),c[2].toString(16)]
+            return c.join("");
+        }
+        
+        // Function to return random values
+        function hexshort() {
+            return ((~~(Math.random()*0x10))<<4) | (~~(Math.random()*0x10));
+        }
+    }
+    
+    //Function to return fixed value
+    else {
+        return function() {
+            return "FFFF00";
+        }
+    }
 }
