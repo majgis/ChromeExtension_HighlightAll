@@ -13,12 +13,12 @@ var selection;
 document.onmouseup = highlightSelection;
 
 //Listener for incoming requests
-chrome.extension.onRequest.addListener(processRequest)
+chrome.runtime.onMessage.addListener(processRequest)
 
 // Handle incoming requests
 function processRequest(request, sender, sendResponse)
 {
-    switch(request.command)
+	switch(request.command)
     {
         case "highlight":
             highlightSelection();
@@ -131,7 +131,7 @@ function processGetSettings(response)
     updateBooleans(response.clearBetweenSelect, response.highlightOnSelect, response.singleWordSearch);
 }
 
-chrome.extension.sendRequest({command:"getSettings"},processGetSettings);
+chrome.runtime.sendMessage({command:"getSettings"},processGetSettings);
 
 
 /* Main content for highlighting
