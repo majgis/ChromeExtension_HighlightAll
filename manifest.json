@@ -1,17 +1,20 @@
 {
-	"version": "0.37",
+	"version": "0.40",
+	"manifest_version": 2,
 	"name": "Highlight All",
 	"description": "Double click a word to highlight all occurrences.",
 
 	"update_url": "http://clients2.google.com/service/update2/crx",
-	"background_page": "htm/background.htm",
+	"background": {
+		"scripts": ["js/background.js"]
+	},
 
 	"browser_action": 
 	{
 		"all_frames": true,
 		"default_icon": "img/hl_16.png",
 		"default_title": "Settings",
-		"popup": "htm/popup.htm"
+		"default_popup": "htm/popup.htm"
 	},
    
 	"content_scripts": 	

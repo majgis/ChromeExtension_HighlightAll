@@ -36,41 +36,15 @@
 	}
 
 </style>
-
-<script>
-
-	//Fetch settings from background.htm
-	function loadSettings(result)
-	{
-		document.getElementById("highlightOnSelect").checked = result.highlightOnSelect;
-		document.getElementById("clearBetweenSelect").checked = result.clearBetweenSelect;
-		document.getElementById("singleWordSearch").checked = result.singleWordSearch;
-	}
-	
-	//Send request to background.htm when button clicked
-	function buttonClicked(button) 
-	{
-		chrome.extension.sendRequest({command:button.id});
-	}
-	
-	//Send request to background.htm when checkbox clicked
-	function checkboxClicked(checkBox)
-	{
-		chrome.extension.sendRequest({command:checkBox.id,value:checkBox.checked});	
-	}
-	
-	//Fetch initial settings
-	chrome.extension.sendRequest({command:"getSettings"}, loadSettings);
-	
-</script>
+<script src="../js/popup.js"></script>
 <div>
-	<input style="width:100%" type="button" value="Highlight Selection" id="highlightSelection" onclick="buttonClicked(this)"/><br/>
-	<input style="width:100%" type="button" value="Clear Highlights" id="clear" onclick="buttonClicked(this)"/><br/>
+	<input class="selection-button" style="width:100%" type="button" value="Highlight Selection" id="highlightSelection" /><br/>
+	<input class="selection-button" style="width:100%" type="button" value="Clear Highlights" id="clear" /><br/>
 	
 	<hr/>
 	
-	<input type="checkbox" id="highlightOnSelect" onclick="checkboxClicked(this)"/>Auto Highlight Selection<br/>
-	<input type="checkbox" id="clearBetweenSelect" onclick="checkboxClicked(this)"/>Clear Between Selections<br/>
-	<input type="checkbox" id="singleWordSearch" onclick="checkboxClicked(this)"/>Split Selection into Words<br/>
+	<input class="setting-checkbox" type="checkbox" id="highlightOnSelect"/>Auto Highlight Selection<br/>
+	<input class="setting-checkbox" type="checkbox" id="clearBetweenSelect" />Clear Between Selections<br/>
+	<input class="setting-checkbox" type="checkbox" id="singleWordSearch" />Split Selection into Words<br/>
 
 </div>

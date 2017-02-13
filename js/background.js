@@ -1,8 +1,4 @@
-
-
-<script>
-
-	var clearBetweenSelect = 'true' === localStorage["clearBetweenSelect"];
+var clearBetweenSelect = 'true' === localStorage["clearBetweenSelect"];
 	var highlightOnSelect = 'true' === localStorage["highlightOnSelect"];
 	var singleWordSearch = 'true' === localStorage["singleWordSearch"];
 	var highlightColor = localStorage["highlightColor"];
@@ -76,18 +72,15 @@
   
     function getCurrentTabAndSendMessages()
     {
-    	chrome.tabs.getSelected(null, sendMessagesToTab)
+		chrome.tabs.query({active: true}, function(tabs)
+		{
+			for (i in messages)
+			{
+				chrome.tabs.sendMessage(tabs[0].id, messages[i], null);
+			}
+			messages = [];
+		});
     }
-  
-  	function sendMessagesToTab(tab)
-  	{
-  		for (i in messages)
-  		{
-  			chrome.tabs.sendRequest(tab.id, messages[i], null)
-  		}
-  		
-  		messages = [];
-  	}
   	
 	// Process an incoming request
 	function processRequest(request, sender, sendResponse) 
@@ -163,10 +156,8 @@
 
 	
 	//Event listeners
-	chrome.extension.onRequest.addListener(processRequest);
+	chrome.runtime.onMessage.addListener(processRequest);
 	
 	// Context menu booleans, when changed, are only sent to the visible tab
 	// To avoid making requests for every highlight event, tabs are automaticlly updated when they come into view
 	chrome.tabs.onSelectionChanged.addListener(sendContextBooleans);
-	
-</script>
